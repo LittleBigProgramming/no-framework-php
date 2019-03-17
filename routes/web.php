@@ -1,7 +1,5 @@
 <?php
 
-$route->get('/', function ($request, $response) {
-    $response->getBody()->write('Home');
+use App\Controllers\HomeController;
 
-    return $response;
-});
+$route->get('/', HomeController::class . '::index')->setName('home');

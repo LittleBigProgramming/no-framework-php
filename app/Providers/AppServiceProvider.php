@@ -28,14 +28,18 @@ class AppServiceProvider extends AbstractServiceProvider
         $container = $this->getContainer();
 
         $container->share(RouteCollection::class, function () use ($container) {
-           return new RouteCollection($container);
+            return new RouteCollection($container);
         });
 
         $container->share('response', Response::class);
 
         $container->share('request', function () {
-           return ServerRequestFactory::fromGlobals(
-               $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
+            return ServerRequestFactory::fromGlobals(
+                $_SERVER,
+                $_GET,
+                $_POST,
+                $_COOKIE,
+                $_FILES
             );
         });
 
