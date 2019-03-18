@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Views\View;
-use LEague\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\ServiceProvider\AbstractServiceProvider;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
