@@ -10,19 +10,9 @@ try {
     echo $e;
 }
 
-$arrayLoader = new App\Config\Loaders\ArrayLoader([
-    'app' => base_path('config/app.php'),
-    'cache' => base_path('config/cache.php')
-]);
-
-$config = new App\Config\Config();
-$config->load([$arrayLoader]);
-
-dump($config->get('app.name.short'));
-
-die;
-
 require_once base_path('/bootstrap/container.php');
+
+$container->get('config')->get('app.name');
 
 $route = $container->get(\League\Route\RouteCollection::class);
 

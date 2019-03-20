@@ -1,7 +1,5 @@
 <?php
 
 return [
-    'name' => [
-        'short' => getenv('APP_NAME')
-    ]
+    'name' => getenv('APP_NAME')
 ];

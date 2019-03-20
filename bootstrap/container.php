@@ -8,4 +8,5 @@ $container->delegate(
 
 $container->addServiceProvider(new \App\Providers\AppServiceProvider());
 $container->addServiceProvider(new \App\Providers\ViewServiceProvider());
+$container->addServiceProvider(new \App\Providers\ConfigServiceProvider());
 
