@@ -17,6 +17,11 @@ class HomeController
 
     public function index(RequestInterface $request, ResponseInterface $response)
     {
-        return $this->view->render($response, 'home.twig');
+        return $this->view->render($response, 'home.twig', [
+            'user' => [
+                'id' => 1,
+                'name' => 'Jane'
+            ]
+        ]);
     }
 }
