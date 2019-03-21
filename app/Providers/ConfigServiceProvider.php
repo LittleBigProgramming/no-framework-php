@@ -17,7 +17,8 @@ class ConfigServiceProvider extends AbstractServiceProvider
         $this->getContainer()->share('config', function () {
             $loader = new ArrayLoader([
                 'app' => base_path('config/app.php'),
-                'cache' => base_path('config/cache.php')
+                'cache' => base_path('config/cache.php'),
+                'database' => base_path('config/database.php')
             ]);
 
             return (new Config)->load([$loader]);

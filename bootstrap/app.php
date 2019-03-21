@@ -19,5 +19,6 @@ $route = $container->get(\League\Route\RouteCollection::class);
 require_once base_path('routes/web.php');
 
 $response = $route->dispatch(
-    $container->get('request'), $container->get('response')
+    $container->get('request'),
+    $container->get('response')
 );
