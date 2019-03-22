@@ -12,7 +12,8 @@
       "league/route": "3.0",
       "zendframework/zend-diactoros": "1.7",
       "twig/twig": "2.4",
-      "doctrine/orm": "2.6"
+      "doctrine/orm": "2.6",
+      "vlucas/valitron": "^1.4"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "3.*",
