@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once  __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
     $dotenv = (new Dotenv\Dotenv(base_path()))->load();
@@ -24,5 +24,7 @@ try {
         $container->get('response')
     );
 } catch (Exception $e) {
-    dump($e);
+    $handler = new App\Exceptions\Handler($e);
+
+    $response = $handler->respond();
 }
