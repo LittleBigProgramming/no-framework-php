@@ -1,5 +1,7 @@
 <?php
 
+use Zend\Diactoros\Response\RedirectResponse;
+
 if (!function_exists('redirect')) {
     function redirect($path)
     {

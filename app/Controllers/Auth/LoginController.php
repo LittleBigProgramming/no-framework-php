@@ -18,7 +18,7 @@ class LoginController extends Controller
 
     public function index(RequestInterface $request, ResponseInterface $response)
     {
-        return $this->view->render($response, 'auth/login.twig');
+        //return $this->view->render($response, 'auth/login.twig');
     }
 
     public function login($request, $response)

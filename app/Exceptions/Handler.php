@@ -5,22 +5,29 @@ namespace App\Exceptions;
 use Exception;
 use ReflectionClass;
 use Zend\Diactoros\Response\RedirectResponse;
+use App\Session\SessionStore;
 
 class Handler
 {
     protected $exception;
+    protected $session;
 
     /**
      * Handler constructor.
      * @param Exception $exception
+     * @param SessionStore $session
      */
-    public function __construct(Exception $exception)
-    {
+    public function __construct(
+        Exception $exception,
+        SessionStore $session
+    ) {
         $this->exception = $exception;
+        $this->session = $session;
     }
 
     /**
      * @throws \ReflectionException
+     * @throws Exception
      */
     public function respond()
     {
@@ -39,7 +46,11 @@ class Handler
      */
     protected function handleValidationException(Exception $e)
     {
-        // session set
+        $this->session->set([
+            'errors' => $e->getErrors(),
+            'old' => $e->getOldInput()
+        ]);
+
         return redirect($e->getPath());
     }
 
