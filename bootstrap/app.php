@@ -18,6 +18,8 @@ $route = $container->get(\League\Route\RouteCollection::class);
 
 $session = $container->get(App\Session\SessionStore::class);
 
+require_once base_path('bootstrap/middleware.php');
+
 require_once base_path('routes/web.php');
 
 try {

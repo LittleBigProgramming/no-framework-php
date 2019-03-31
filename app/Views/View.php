@@ -4,6 +4,7 @@ namespace App\Views;
 
 use Psr\Http\Message\ResponseInterface;
 use Twig_Environment;
+use Twig_Loader_Filesystem;
 
 class View
 {
@@ -21,5 +22,12 @@ class View
         );
 
         return $response;
+    }
+
+    public function share(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->twig->addGlobal($key, $value);
+        }
     }
 }
