@@ -12,7 +12,14 @@ class Auth
     protected $database;
     protected $hash;
     protected $session;
+    protected $user;
 
+    /**
+     * Auth constructor.
+     * @param EntityManager $database
+     * @param HashingInterface $hash
+     * @param SessionStore $session
+     */
     public function __construct(EntityManager $database, HashingInterface $hash, SessionStore $session)
     {
         $this->database = $database;
@@ -34,6 +41,7 @@ class Auth
         }
 
         $this->setUserSession($user);
+
         return true;
     }
 
@@ -46,6 +54,15 @@ class Auth
         return $this->database->getRepository(User::class)->findOneBy([
             'email' => $username
         ]);
+    }
+
+    /**
+     * @param $id
+     * @return null|object
+     */
+    protected function getById($id)
+    {
+        return $this->database->getRepository(User::class)->find($id);
     }
 
     /**
@@ -63,6 +80,44 @@ class Auth
      */
     protected function setUserSession($user)
     {
-        $this->session->set('id', $user->id);
+        $this->session->set($this->key(), $user->id);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return string
+     */
+    protected function key()
+    {
+        return 'id';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function hasUserInSession()
+    {
+        return $this->session->exists($this->key());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function setUserFromSession()
+    {
+        $user = $this->getById($this->session->get($this->key()));
+
+        if (!$user) {
+            throw new \Exception();
+        }
+
+        $this->user = $user;
     }
 }
