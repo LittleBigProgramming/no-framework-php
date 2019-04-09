@@ -11,6 +11,7 @@ return [
         'App\Providers\SessionServiceProvider',
         'App\Providers\HashServiceProvider',
         'App\Providers\AuthServiceProvider',
+        'App\Providers\FlashServiceProvider',
         'App\Providers\ViewShareServiceProvider',
     ],
 

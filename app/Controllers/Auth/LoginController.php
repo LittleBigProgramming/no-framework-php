@@ -4,6 +4,7 @@ namespace App\Controllers\Auth;
 
 use App\Auth\Auth;
 use App\Controllers\Controller;
+use App\Session\Flash;
 use App\Views\View;
 use League\Route\RouteCollection;
 use Psr\Http\Message\RequestInterface;
@@ -14,21 +15,25 @@ class LoginController extends Controller
     protected $view;
     protected $auth;
     protected $route;
+    protected $flash;
 
     /**
      * LoginController constructor.
      * @param View $view
      * @param Auth $auth
      * @param RouteCollection $route
+     * @param Flash $flash
      */
     public function __construct(
         View $view,
         Auth $auth,
-        RouteCollection $route
+        RouteCollection $route,
+        Flash $flash
     ) {
         $this->view = $view;
         $this->auth = $auth;
         $this->route = $route;
+        $this->flash = $flash;
     }
 
     /**
@@ -57,6 +62,9 @@ class LoginController extends Controller
         $attempt = $this->auth->attempt($data['email'], $data['password']);
 
         if (!$attempt) {
+            $this->flash->now('error', 'Could not with sign in the the entered credentials.');
+
+            return redirect($request->getUri()->getPath());
             dump('failed');
             die;
         }
