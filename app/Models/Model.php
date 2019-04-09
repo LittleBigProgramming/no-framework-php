@@ -4,6 +4,10 @@ namespace App\Models;
 
 abstract class Model
 {
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function __get($name)
     {
         if (property_exists($this, $name)) {
@@ -11,6 +15,10 @@ abstract class Model
         }
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function __isset($name)
     {
         if (property_exists($this, $name)) {
@@ -18,5 +26,15 @@ abstract class Model
         }
 
         return false;
+    }
+
+    /**
+     * @param array $columns
+     */
+    public function update(array $columns)
+    {
+        foreach ($columns as $column => $value) {
+            $this->{$column} = $value;
+        }
     }
 }
