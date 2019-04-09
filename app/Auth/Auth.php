@@ -120,4 +120,12 @@ class Auth
 
         $this->user = $user;
     }
+
+    /**
+     * @return mixed
+     */
+    public function isLoggedIn()
+    {
+        return $this->hasUserInSession();
+    }
 }
