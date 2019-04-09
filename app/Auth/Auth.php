@@ -40,6 +40,10 @@ class Auth
             return false;
         }
 
+        if ($this->needsRehash($user)) {
+            $this->rehashPassword($user, $password);
+        }
+
         $this->setUserSession($user);
 
         return true;
@@ -81,6 +85,20 @@ class Auth
     protected function setUserSession($user)
     {
         $this->session->set($this->key(), $user->id);
+    }
+
+    protected function needsRehash($user)
+    {
+        return $this->hash->needsRehash($user->password);
+    }
+
+    protected function rehashPassword($user, $password)
+    {
+        $this->database->getRepository(User::class)->find($user->id)->update([
+            'password' => $this->hash->create($password)
+        ]);
+
+        $this->database->flush();
     }
 
     /**
