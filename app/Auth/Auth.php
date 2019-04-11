@@ -49,6 +49,11 @@ class Auth
         return true;
     }
 
+    public function logout()
+    {
+        $this->session->clear($this->key());
+    }
+
     /**
      * @param $username
      * @return null|object
