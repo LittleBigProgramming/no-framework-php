@@ -30,7 +30,9 @@ try {
 } catch (Exception $e) {
     $handler = new App\Exceptions\Handler(
         $e,
-        $container->get(App\Session\SessionStore::class)
+        $container->get(App\Session\SessionStore::class),
+        $container->get('response'),
+        $container->get(\App\Views\View::class)
     );
 
     $response = $handler->respond();
