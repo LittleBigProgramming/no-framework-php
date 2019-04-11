@@ -19,6 +19,7 @@ return [
     'middleware' => [
         'App\Middleware\ShareValidationErrors',
         'App\Middleware\ClearValidationErrors',
-        'App\Middleware\Authentication'
+        'App\Middleware\Authentication',
+        'App\Middleware\CsrfGuard'
     ]
 ];

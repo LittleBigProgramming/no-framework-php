@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use App\Views\View;
 use Exception;
+use Psr\Http\Message\ResponseInterface;
 use ReflectionClass;
 use Zend\Diactoros\Response\RedirectResponse;
 use App\Session\SessionStore;
@@ -11,18 +13,26 @@ class Handler
 {
     protected $exception;
     protected $session;
+    protected $response;
+    protected $view;
 
     /**
      * Handler constructor.
      * @param Exception $exception
      * @param SessionStore $session
+     * @param ResponseInterface $response
+     * @param View $view
      */
     public function __construct(
         Exception $exception,
-        SessionStore $session
+        SessionStore $session,
+        ResponseInterface $response,
+        View $view
     ) {
         $this->exception = $exception;
         $this->session = $session;
+        $this->response = $response;
+        $this->view = $view;
     }
 
     /**
@@ -52,6 +62,11 @@ class Handler
         ]);
 
         return redirect($e->getPath());
+    }
+
+    protected function handleCsrfTokenException(Exception $e)
+    {
+        return $this->view->render($this->response, 'errors/csrf.twig');
     }
 
     /**

@@ -44,6 +44,15 @@ class Csrf
     }
 
     /**
+     * @param $token
+     * @return bool
+     */
+    public function tokenIsValid($token) : bool
+    {
+        return $token === $this->session->get($this->key());
+    }
+
+    /**
      * @return mixed
      */
     protected function getTokenFromSession()
