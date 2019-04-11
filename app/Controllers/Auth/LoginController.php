@@ -65,8 +65,6 @@ class LoginController extends Controller
             $this->flash->now('error', 'Could not with sign in the the entered credentials.');
 
             return redirect($request->getUri()->getPath());
-            dump('failed');
-            die;
         }
 
         return redirect($this->route->getNamedRoute('home')->getPath());
