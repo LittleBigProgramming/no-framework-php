@@ -28,6 +28,7 @@
                         Remember Me
                     </label>
                 </div>
+                <input type="hidden" name="{{ csrf.key }}" value="{{ csrf.token }}">
                 <button class="btn btn-primary" type="submit">Login</button>
             </form>
         </div>
