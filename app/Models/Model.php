@@ -37,4 +37,12 @@ abstract class Model
             $this->{$column} = $value;
         }
     }
+
+    /**
+     * @param array $columns
+     */
+    public function fill(array $columns)
+    {
+        $this->update($columns);
+    }
 }

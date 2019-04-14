@@ -13,6 +13,13 @@ class ExistsRule
         $this->database = $database;
     }
 
+    /**
+     * @param $field
+     * @param $value
+     * @param $params
+     * @param $fields
+     * @return bool
+     */
     public function validate($field, $value, $params, $fields)
     {
         $result = $this->database->getRepository($params[0])
