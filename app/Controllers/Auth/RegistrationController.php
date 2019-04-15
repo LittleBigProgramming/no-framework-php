@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Auth;
 
+use App\Auth\Auth;
 use App\Auth\Hashing\HashingInterface;
 use App\Controllers\Controller;
 use App\Models\User;
@@ -23,17 +24,20 @@ class RegistrationController extends Controller
      * @param HashingInterface $hash
      * @param RouteCollection $route
      * @param EntityManager $database
+     * @param Auth $auth
      */
     public function __construct(
         View $view,
         HashingInterface $hash,
         RouteCollection $route,
-        EntityManager $database
+        EntityManager $database,
+        Auth $auth
     ) {
         $this->view = $view;
         $this->hash = $hash;
         $this->route = $route;
         $this->database = $database;
+        $this->auth = $auth;
     }
 
     /**
@@ -59,6 +63,10 @@ class RegistrationController extends Controller
         $data = $this->validateRegistration($request);
         $user = $this->createUser($data);
 
+        if (!$this->auth->attempt($data['email'], $data['password'])) {
+            return redirect($this->route->getNamedRoute('home')->getPath());
+        }
+        
         return redirect($this->route->getNamedRoute('home')->getPath());
     }
 
