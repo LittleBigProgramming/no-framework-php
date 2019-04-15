@@ -1,8 +1,14 @@
 <?php
 
+use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
+use App\Middleware\Authenticated;
 
 $route->get('/', HomeController::class . '::index')->setName('home');
+
+$route->group('', function ($route) {
+    $route->get('/dashboard', DashboardController::class . '::index')->setName('dashboard');
+})->middleware($container->get(Authenticated::class));
 
 $route->group('/auth', function ($route) {
     $route->get('/login', 'App\Controllers\Auth\LoginController::index')->setName('auth.login');
