@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Cookie\CookieJar;
 use App\Views\View;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -9,16 +10,17 @@ use Psr\Http\Message\ResponseInterface;
 class HomeController
 {
     protected $view;
-    protected $auth;
+    protected $cookie;
 
     /**
      * HomeController constructor.
      * @param View $view
-     * @param Auth $auth
+     * @param CookieJar $cookie
      */
-    public function __construct(View $view)
+    public function __construct(View $view, CookieJar $cookie)
     {
         $this->view = $view;
+        $this->cookie = $cookie;
     }
 
     /**
