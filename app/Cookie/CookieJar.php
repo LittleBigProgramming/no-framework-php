@@ -45,7 +45,7 @@ class CookieJar
 
     /**
      * @param $key
-     * @return bool
+     * @return booll
      */
     public function exists($key)
     {

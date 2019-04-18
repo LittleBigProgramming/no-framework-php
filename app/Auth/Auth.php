@@ -3,6 +3,7 @@
 namespace App\Auth;
 
 use App\Auth\Hashing\HashingInterface;
+use App\Cookie\CookieJar;
 use App\Models\User;
 use App\Session\SessionStore;
 use Doctrine\ORM\EntityManager;
@@ -12,6 +13,8 @@ class Auth
     protected $database;
     protected $hash;
     protected $session;
+    protected $recaller;
+    protected $cookie;
     protected $user;
 
     /**
@@ -19,20 +22,32 @@ class Auth
      * @param EntityManager $database
      * @param HashingInterface $hash
      * @param SessionStore $session
+     * @param Recaller $recaller
+     * @param CookieJar $cookie
      */
-    public function __construct(EntityManager $database, HashingInterface $hash, SessionStore $session)
-    {
+    public function __construct(
+        EntityManager $database,
+        HashingInterface $hash,
+        SessionStore $session,
+        Recaller $recaller,
+        CookieJar $cookie
+    ) {
         $this->database = $database;
         $this->hash = $hash;
         $this->session = $session;
+        $this->recaller = $recaller;
+        $this->cookie = $cookie;
     }
 
     /**
      * @param $username
      * @param $password
+     * @param bool $remember
      * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function attempt($username, $password)
+    public function attempt($username, $password, $remember = false)
     {
         $user = $this->getByUsername($username);
 
@@ -45,6 +60,10 @@ class Auth
         }
 
         $this->setUserSession($user);
+
+        if ($remember) {
+            $this->setRememberToken($user);
+        }
 
         return true;
     }
@@ -92,11 +111,21 @@ class Auth
         $this->session->set($this->key(), $user->id);
     }
 
+    /**
+     * @param $user
+     * @return mixed
+     */
     protected function needsRehash($user)
     {
         return $this->hash->needsRehash($user->password);
     }
 
+    /**
+     * @param $user
+     * @param $password
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     protected function rehashPassword($user, $password)
     {
         $this->database->getRepository(User::class)->find($user->id)->update([
@@ -142,6 +171,25 @@ class Auth
         }
 
         $this->user = $user;
+    }
+
+    /**
+     * @param $user
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    protected function setRememberToken($user)
+    {
+        list($identifier, $token) = $this->recaller->generate();
+
+        $this->cookie->set('remember', $this->recaller->generateValueForCookie($token, $identifier));
+
+        $this->database->getRepository(User::class)->find($user->id)->update([
+            'remember_identifier' => $identifier,
+            'remember_token' => $this->recaller->getTokenHashForDatabase($token),
+        ]);
+
+        $this->database->flush();
     }
 
     /**
