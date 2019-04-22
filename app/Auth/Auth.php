@@ -174,6 +174,48 @@ class Auth
     }
 
     /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function setUserFromCookie()
+    {
+        list($identifier, $token) = $this->recaller->splitCookieValue(
+            $this->cookie->get('remember')
+        );
+
+        $user = $this->database->getRepository(User::class)->findOneBy([
+            'remember_identifier' => $identifier
+        ]);
+
+        if (!$user) {
+            $this->cookie->clear('remember');
+
+            return;
+        }
+
+        if (!$this->recaller->validateToken($token, $user->remember_token)) {
+            $user = $this->database->getRepository(User::class)->find($user->id)->update([
+                'remember_identifier' => null,
+                'remember_token' => null
+            ]);
+
+            $this->database->flush();
+
+            throw new \Exception();
+        }
+
+        $this->setUserSession($user);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasRecallerCookie()
+    {
+        return $this->cookie->exists('remember');
+    }
+
+    /**
      * @param $user
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -182,7 +224,7 @@ class Auth
     {
         list($identifier, $token) = $this->recaller->generate();
 
-        $this->cookie->set('remember', $this->recaller->generateValueForCookie($token, $identifier));
+        $this->cookie->set('remember', $this->recaller->generateValueForCookie($identifier, $token));
 
         $this->database->getRepository(User::class)->find($user->id)->update([
             'remember_identifier' => $identifier,

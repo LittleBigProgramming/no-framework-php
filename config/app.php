@@ -22,6 +22,7 @@ return [
         'App\Middleware\ShareValidationErrors',
         'App\Middleware\ClearValidationErrors',
         'App\Middleware\Authentication',
+        'App\Middleware\AuthenticationFromCookie',
         'App\Middleware\CsrfGuard'
     ]
 ];

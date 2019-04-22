@@ -15,6 +15,16 @@ class Recaller
     }
 
     /**
+     * @param $plain
+     * @param $hash
+     * @return bool
+     */
+    public function validateToken($plain, $hash)
+    {
+        return $this->getTokenHashForDatabase($plain) === $hash;
+    }
+
+    /**
      * @param $identifier
      * @param $token
      * @return string
@@ -34,6 +44,15 @@ class Recaller
     }
 
     /**
+     * @param $value
+     * @return array
+     */
+    public function splitCookieValue($value)
+    {
+        return explode($this->seperator, $value);
+    }
+
+    /**
      * @return string
      * @throws \Exception
      */
@@ -48,6 +67,6 @@ class Recaller
      */
     protected function generateToken()
     {
-        return bin2hex(random_bytes(64));
+        return bin2hex(random_bytes(32));
     }
 }
