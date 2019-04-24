@@ -6,7 +6,6 @@ use App\Auth\Hashing\HashingInterface;
 use App\Auth\Providers\UserProvider;
 use App\Cookie\CookieJar;
 use App\Session\SessionStore;
-use Doctrine\ORM\EntityManager;
 
 class Auth
 {
@@ -23,7 +22,7 @@ class Auth
      * @param SessionStore $session
      * @param Recaller $recaller
      * @param CookieJar $cookie
-     * @param UserProvider $user
+     * @param UserProvider $provider
      */
     public function __construct(
         HashingInterface $hash,
